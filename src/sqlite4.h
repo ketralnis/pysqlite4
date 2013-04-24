@@ -1,1 +1,1 @@
-../SQLite4-fde11ff78c433d66/sqlite4.h
+../amalgamation/sqlite4.h

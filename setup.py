@@ -87,31 +87,8 @@ class DocBuilder(Command):
 AMALGAMATION_ROOT = "amalgamation"
 
 def get_amalgamation():
-    """Download the SQLite amalgamation if it isn't there, already."""
-    if os.path.exists(AMALGAMATION_ROOT):
-        return
-    os.mkdir(AMALGAMATION_ROOT)
-    print "Downloading amalgation."
-
-    # find out what's current amalgamation ZIP file
-    download_page = urllib.urlopen("http://sqlite.org/download.html").read()
-    pattern = re.compile("(sqlite-amalgamation.*?\.zip)")
-    download_file = pattern.findall(download_page)[0]
-    amalgamation_url = "http://sqlite.org/" + download_file
-
-    # and download it
-    urllib.urlretrieve(amalgamation_url, "tmp.zip")
-
-    zf = zipfile.ZipFile("tmp.zip")
-    files = ["sqlite4.c", "sqlite4.h"]
-    directory = zf.namelist()[0]
-    for fn in files:
-        print "Extracting", fn
-        outf = open(AMALGAMATION_ROOT + os.sep + fn, "wb")
-        outf.write(zf.read(directory + fn))
-        outf.close()
-    zf.close()
-    os.unlink("tmp.zip")
+    # The amalgamation should be checked in in this version
+    return
 
 class AmalgamationBuilder(build):
     description = "Build a statically built pysqlite using the amalgamtion."
