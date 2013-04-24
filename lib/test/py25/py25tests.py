@@ -1,5 +1,5 @@
 #-*- coding: ISO-8859-1 -*-
-# pysqlite2/test/regression.py: pysqlite regression tests
+# pysqlite4/test/regression.py: pysqlite regression tests
 #
 # Copyright (C) 2007 Gerhard Häring <gh@ghaering.de>
 #
@@ -23,7 +23,7 @@
 
 from __future__ import with_statement
 import unittest
-import pysqlite2.dbapi2 as sqlite
+import pysqlite4.dbapi2 as sqlite
 
 did_rollback = False
 

@@ -1,5 +1,5 @@
 from __future__ import with_statement
-from pysqlite2 import dbapi2 as sqlite4
+from pysqlite4 import dbapi2 as sqlite4
 from datetime import datetime, timedelta
 import time
 

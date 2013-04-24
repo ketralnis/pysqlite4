@@ -1,4 +1,4 @@
-from pysqlite2 import dbapi2 as sqlite4
+from pysqlite4 import dbapi2 as sqlite4
 import datetime
 
 con = sqlite4.connect(":memory:", detect_types=sqlite4.PARSE_DECLTYPES|sqlite4.PARSE_COLNAMES)

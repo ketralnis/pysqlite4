@@ -1,5 +1,5 @@
 #-*- coding: ISO-8859-1 -*-
-# pysqlite2/__init__.py: the pysqlite2 package.
+# pysqlite4/__init__.py: the pysqlite4 package.
 #
 # Copyright (C) 2005-2007 Gerhard Häring <gh@ghaering.de>
 #

@@ -4,16 +4,16 @@ def yesno(question):
     val = raw_input(question + " ")
     return val.startswith("y") or val.startswith("Y")
 
-use_pysqlite2 = yesno("Use pysqlite 2.0?")
-if use_pysqlite2:
+use_pysqlite4 = yesno("Use pysqlite 2.0?")
+if use_pysqlite4:
     use_custom_types = yesno("Use custom types?")
     use_dictcursor = yesno("Use dict cursor?")
     use_rowcursor = yesno("Use row cursor?")
 else:
     use_tuple = yesno("Use rowclass=tuple?")
 
-if use_pysqlite2:
-    from pysqlite2 import dbapi2 as sqlite
+if use_pysqlite4:
+    from pysqlite4 import dbapi2 as sqlite
 else:
     import sqlite
 
@@ -23,7 +23,7 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-if use_pysqlite2:
+if use_pysqlite4:
     def dict_factory(cursor, row):
         d = {}
         for idx, col in enumerate(cursor.description):

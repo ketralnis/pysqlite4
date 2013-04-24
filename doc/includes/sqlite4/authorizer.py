@@ -1,4 +1,4 @@
-from pysqlite2 import dbapi2 as sqlite4
+from pysqlite4 import dbapi2 as sqlite4
 
 def authorizer_callback(action, arg1, arg2, dbname, source):
     if action != sqlite4.SQLITE4_SELECT:

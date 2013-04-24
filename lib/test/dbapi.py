@@ -1,5 +1,5 @@
 #-*- coding: ISO-8859-1 -*-
-# pysqlite2/test/dbapi.py: tests for DB-API compliance
+# pysqlite4/test/dbapi.py: tests for DB-API compliance
 #
 # Copyright (C) 2004-2009 Gerhard Häring <gh@ghaering.de>
 #
@@ -24,7 +24,7 @@
 import unittest
 import sys
 import threading
-import pysqlite2.dbapi2 as sqlite
+import pysqlite4.dbapi2 as sqlite
 
 class ModuleTests(unittest.TestCase):
     def CheckAPILevel(self):

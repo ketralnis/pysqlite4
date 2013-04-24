@@ -87,10 +87,10 @@ first error (like not finding the sqlite4.h header file).
 Step 3: Install pysqlite
 ========================
 
-During this step, the setup script moves the *pysqlite2* package (including the
+During this step, the setup script moves the *pysqlite4* package (including the
 newly compiled C extension) to the standard package directory of your Python
-installation so that Python will be able to import pysqlite2.dbapi2 and
-pysqlite2.test.
+installation so that Python will be able to import pysqlite4.dbapi2 and
+pysqlite4.test.
 
 In addition to the Python code and shared library files actually used by the
 Python interpreter, the setup script typically installs some supporting files,
@@ -112,7 +112,7 @@ script. If you encounter such an error, try one of the following:
 
 - Log in as a user who has the required file system permissions and repeat the
   installation step.
-- Manually copy the directory build/lib.platform-pyver/pysqlite2 (which
+- Manually copy the directory build/lib.platform-pyver/pysqlite4 (which
   contains the Python modules and compiled library files created during the
   compilation step) to a directory in your PYTHONPATH. This approach will not
   install the supporting files, but they are for the benefit of the programmer
@@ -128,7 +128,7 @@ site-packages directory), then run the pysqlite test suite by starting a Python
 interpreter for the Python version you installed pysqlite for and entering the
 following::
 
-    >>> from pysqlite2 import test
+    >>> from pysqlite4 import test
     >>> test.test()
     .....................................................................................................
     ----------------------------------------------------------------------

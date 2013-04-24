@@ -1,4 +1,4 @@
-from pysqlite2 import dbapi2 as sqlite4
+from pysqlite4 import dbapi2 as sqlite4
 
 # Create a connection to the database file "mydb":
 con = sqlite4.connect("mydb")

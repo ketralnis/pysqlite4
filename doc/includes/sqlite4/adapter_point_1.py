@@ -1,4 +1,4 @@
-from pysqlite2 import dbapi2 as sqlite4
+from pysqlite4 import dbapi2 as sqlite4
 
 class Point(object):
     def __init__(self, x, y):

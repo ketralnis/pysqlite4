@@ -1,4 +1,4 @@
-from pysqlite2 import dbapi2 as sqlite
+from pysqlite4 import dbapi2 as sqlite
 import os, threading
 
 def getcon():

@@ -1,4 +1,4 @@
-from pysqlite2 import dbapi2 as sqlite4
+from pysqlite4 import dbapi2 as sqlite4
 
 FIELD_MAX_WIDTH = 20
 TABLE_NAME = 'people'

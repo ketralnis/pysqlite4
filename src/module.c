@@ -271,7 +271,7 @@ PyMODINIT_FUNC init_sqlite(void)
     PyObject *tmp_obj;
     int i;
 
-    module = Py_InitModule("pysqlite2._sqlite", module_methods);
+    module = Py_InitModule("pysqlite4._sqlite", module_methods);
 
     if (!module ||
         (pysqlite_row_setup_types() < 0) ||
@@ -420,6 +420,6 @@ PyMODINIT_FUNC init_sqlite(void)
 error:
     if (PyErr_Occurred())
     {
-        PyErr_SetString(PyExc_ImportError, "pysqlite2._sqlite: init failed");
+        PyErr_SetString(PyExc_ImportError, "pysqlite4._sqlite: init failed");
     }
 }

@@ -1,7 +1,7 @@
 # Author: Paul Kippes <kippesp@gmail.com>
 
 import unittest
-from pysqlite2 import dbapi2 as sqlite
+from pysqlite4 import dbapi2 as sqlite
 
 class DumpTests(unittest.TestCase):
     def setUp(self):

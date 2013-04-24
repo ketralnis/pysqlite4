@@ -1,7 +1,7 @@
 # Not referenced from the documentation, but builds the database file the other
 # code snippets expect.
 
-from pysqlite2 import dbapi2 as sqlite4
+from pysqlite4 import dbapi2 as sqlite4
 import os
 
 DB_FILE = "mydb"

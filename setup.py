@@ -59,9 +59,9 @@ It is almost fully compliant with the Python database API version 2.0 also
 exposes the unique features of SQLite."""
 
 if sys.platform != "win32":
-    define_macros.append(('MODULE_NAME', '"pysqlite2.dbapi2"'))
+    define_macros.append(('MODULE_NAME', '"pysqlite4.dbapi2"'))
 else:
-    define_macros.append(('MODULE_NAME', '\\"pysqlite2.dbapi2\\"'))
+    define_macros.append(('MODULE_NAME', '\\"pysqlite4.dbapi2\\"'))
 
 class DocBuilder(Command):
     description = "Builds the documentation"
@@ -133,11 +133,11 @@ def get_setup_args():
         print "Fatal error: PYSQLITE4_VERSION could not be detected!"
         sys.exit(1)
 
-    data_files = [("pysqlite2-doc",
+    data_files = [("pysqlite4-doc",
                         glob.glob("doc/*.html") \
                       + glob.glob("doc/*.txt") \
                       + glob.glob("doc/*.css")),
-                   ("pysqlite2-doc/code",
+                   ("pysqlite4-doc/code",
                         glob.glob("doc/code/*.py"))]
 
     py_modules = ["sqlite"]
@@ -154,13 +154,13 @@ def get_setup_args():
             download_url = "http://code.google.com/p/pysqlite/downloads/list",
 
             # Description of the modules and packages in the distribution
-            package_dir = {"pysqlite2": "lib"},
-            packages = ["pysqlite2", "pysqlite2.test"] +
-                       (["pysqlite2.test.py25"], [])[sys.version_info < (2, 5)],
+            package_dir = {"pysqlite4": "lib"},
+            packages = ["pysqlite4", "pysqlite4.test"] +
+                       (["pysqlite4.test.py25"], [])[sys.version_info < (2, 5)],
             scripts=[],
             data_files = data_files,
 
-            ext_modules = [Extension( name="pysqlite2._sqlite",
+            ext_modules = [Extension( name="pysqlite4._sqlite",
                                       sources=sources,
                                       include_dirs=include_dirs,
                                       library_dirs=library_dirs,

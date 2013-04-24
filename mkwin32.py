@@ -41,9 +41,9 @@ def compile_module(pyver):
     INC = "%s/python%s/include" % (CROSS_TOOLS, VER)
     vars = locals()
     vars.update(globals())
-    cmd = '%(CC)s -mno-cygwin %(OPT)s -mdll -DMODULE_NAME=\\"pysqlite2._sqlite\\" -DSQLITE4_ENABLE_RTREE=1 -DSQLITE4_ENABLE_FTS3=1 -I amalgamation -I %(INC)s -I . %(SRC)s -L %(CROSS_TOOLS)s/python%(VER)s/libs -lpython%(VER)s -o build/%(LIBDIR)s/pysqlite2/_sqlite.pyd' % vars
+    cmd = '%(CC)s -mno-cygwin %(OPT)s -mdll -DMODULE_NAME=\\"pysqlite4._sqlite\\" -DSQLITE4_ENABLE_RTREE=1 -DSQLITE4_ENABLE_FTS3=1 -I amalgamation -I %(INC)s -I . %(SRC)s -L %(CROSS_TOOLS)s/python%(VER)s/libs -lpython%(VER)s -o build/%(LIBDIR)s/pysqlite4/_sqlite.pyd' % vars
     execute(cmd)
-    execute("%(STRIP)s build/%(LIBDIR)s/pysqlite2/_sqlite.pyd" % vars)
+    execute("%(STRIP)s build/%(LIBDIR)s/pysqlite4/_sqlite.pyd" % vars)
 
 def main():
     vars = locals()
@@ -54,7 +54,7 @@ def main():
         # First, compile the host version. This is just to get the .py files in place.
         execute("python2.5 setup.py build")
         # Yes, now delete the host extension module. What a waste of time.
-        os.unlink("build/%(LIBDIR)s/pysqlite2/_sqlite.so" % vars)
+        os.unlink("build/%(LIBDIR)s/pysqlite4/_sqlite.so" % vars)
         # Cross-compile win32 extension module.
         compile_module(ver)
         # Prepare for target Python version.
