@@ -103,8 +103,8 @@ class MyBuildExt(build_ext):
     def build_extension(self, ext):
         if self.amalgamation:
             get_amalgamation()
-            ext.define_macros.append(("SQLITE4_ENABLE_FTS3", "1"))   # build with fulltext search enabled
-            ext.define_macros.append(("SQLITE4_ENABLE_RTREE", "1"))   # build with fulltext search enabled
+            #ext.define_macros.append(("SQLITE4_ENABLE_FTS3", "1"))   # build with fulltext search enabled
+            #ext.define_macros.append(("SQLITE4_ENABLE_RTREE", "1"))   # build with fulltext search enabled
             ext.sources.append(os.path.join(AMALGAMATION_ROOT, "sqlite4.c"))
             ext.include_dirs.append(AMALGAMATION_ROOT)
         build_ext.build_extension(self, ext)
