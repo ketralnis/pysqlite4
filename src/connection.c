@@ -45,6 +45,8 @@
 #endif
 #endif
 
+#define SQLITE4_OMIT_PROGRESS_CALLBACK 1 /* https://www.sqlite.org/src4/artifact/f01a54871d8cff84c3e3cbf0445567d29ed902a3 */
+
 static int pysqlite_connection_set_isolation_level(pysqlite_Connection* self, PyObject* isolation_level);
 static void _pysqlite_drop_unused_cursor_references(pysqlite_Connection* self);
 
@@ -986,6 +988,7 @@ static int _authorizer_callback(void* user_arg, int action, const char* arg1, co
     return rc;
 }
 
+#ifndef SQLITE4_OMIT_PROGRESS_CALLBACK
 static int _progress_handler(void* user_arg)
 {
     int rc;
@@ -1016,6 +1019,7 @@ static int _progress_handler(void* user_arg)
 #endif
     return rc;
 }
+#endif
 
 static PyObject* pysqlite_connection_set_authorizer(pysqlite_Connection* self, PyObject* args, PyObject* kwargs)
 {
@@ -1047,6 +1051,7 @@ static PyObject* pysqlite_connection_set_authorizer(pysqlite_Connection* self, P
     }
 }
 
+#ifndef SQLITE4_OMIT_PROGRESS_CALLBACK
 static PyObject* pysqlite_connection_set_progress_handler(pysqlite_Connection* self, PyObject* args, PyObject* kwargs)
 {
     PyObject* progress_handler;
@@ -1075,6 +1080,7 @@ static PyObject* pysqlite_connection_set_progress_handler(pysqlite_Connection* s
     Py_INCREF(Py_None);
     return Py_None;
 }
+#endif
 
 #ifdef HAVE_LOAD_EXTENSION
 static PyObject* pysqlite_enable_load_extension(pysqlite_Connection* self, PyObject* args)
@@ -1617,8 +1623,10 @@ static PyMethodDef connection_methods[] = {
     {"load_extension", (PyCFunction)pysqlite_load_extension, METH_VARARGS,
         PyDoc_STR("Load SQLite extension module. Non-standard.")},
     #endif
+    #ifndef SQLITE4_OMIT_PROGRESS_CALLBACK
     {"set_progress_handler", (PyCFunction)pysqlite_connection_set_progress_handler, METH_VARARGS|METH_KEYWORDS,
         PyDoc_STR("Sets progress handler callback. Non-standard.")},
+    #endif
     {"execute", (PyCFunction)pysqlite_connection_execute, METH_VARARGS,
         PyDoc_STR("Executes a SQL statement. Non-standard.")},
     {"executemany", (PyCFunction)pysqlite_connection_executemany, METH_VARARGS,
