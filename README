@@ -1,0 +1,14 @@
+A port of pysqlite to sqlite4
+
+Caveats:
+
+* sqlite4 isn't ready for primetime, and pysqlite4 even less so. it doesn't pass all of its own tests and there are probably more murky bugs waiting to happen
+
+* not all sqlite4 features are enabled. notably due to an amalgamation build bug in sqlite4's tip, neither FTS nor RTREE are included
+
+* setting collation is currently known to be broken (the collation-related tests also fail)
+
+* the port is from an old version of pysqlite (39c09e8af27c at https://code.google.com/p/pysqlite/source/list), so some sqlite3-module and dbapi bugs that have been fixed in the native sqlite3 mobule are present, including some unicode-related ones
+
+* the sqlite4 amalgamation is checked in, so the sqlite4 version isn't automatically up to date with sqlite4's tip
+
