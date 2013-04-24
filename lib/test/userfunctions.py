@@ -357,11 +357,11 @@ class AggregateTests(unittest.TestCase):
         self.assertEqual(val, 60)
 
 def authorizer_cb(action, arg1, arg2, dbname, source):
-    if action != sqlite.SQLITE_SELECT:
-        return sqlite.SQLITE_DENY
+    if action != sqlite.SQLITE4_SELECT:
+        return sqlite.SQLITE4_DENY
     if arg2 == 'c2' or arg1 == 't2':
-        return sqlite.SQLITE_DENY
-    return sqlite.SQLITE_OK
+        return sqlite.SQLITE4_DENY
+    return sqlite.SQLITE4_OK
 
 class AuthorizerTests(unittest.TestCase):
     def setUp(self):

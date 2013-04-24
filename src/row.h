@@ -21,8 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_ROW_H
-#define PYSQLITE_ROW_H
+#ifndef PYSQLITE4_ROW_H
+#define PYSQLITE4_ROW_H
 #include "Python.h"
 
 typedef struct _Row

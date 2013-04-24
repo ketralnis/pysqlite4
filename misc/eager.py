@@ -1,6 +1,6 @@
-from pysqlite2 import dbapi2 as sqlite3
+from pysqlite2 import dbapi2 as sqlite4
 
-Cursor = sqlite3.Cursor
+Cursor = sqlite4.Cursor
 
 class EagerCursor(Cursor):
     def __init__(self, con):
@@ -9,7 +9,7 @@ class EagerCursor(Cursor):
         self.pos = 0
 
     def execute(self, *args):
-        sqlite3.Cursor.execute(self, *args)
+        sqlite4.Cursor.execute(self, *args)
         self.rows = Cursor.fetchall(self)
         self.pos = 0
 
@@ -35,7 +35,7 @@ class EagerCursor(Cursor):
         return result
 
 def test():
-    con = sqlite3.connect(":memory:")
+    con = sqlite4.connect(":memory:")
     cur = con.cursor(EagerCursor)
     cur.execute("create table test(foo)")
     cur.executemany("insert into test(foo) values (?)", [(3,), (4,), (5,)])

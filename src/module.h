@@ -21,11 +21,11 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_MODULE_H
-#define PYSQLITE_MODULE_H
+#ifndef PYSQLITE4_MODULE_H
+#define PYSQLITE4_MODULE_H
 #include "Python.h"
 
-#define PYSQLITE_VERSION "2.6.3"
+#define PYSQLITE4_VERSION "2.6.3"
 
 extern PyObject* pysqlite_Error;
 extern PyObject* pysqlite_Warning;

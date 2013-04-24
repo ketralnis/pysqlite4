@@ -1,7 +1,7 @@
-:mod:`sqlite3` --- DB-API 2.0 interface for SQLite databases
+:mod:`sqlite4` --- DB-API 2.0 interface for SQLite databases
 ============================================================
 
-.. module:: sqlite3
+.. module:: sqlite4
    :synopsis: A DB-API 2.0 implementation using SQLite 3.x.
 .. sectionauthor:: Gerhard HÃ¤ring <gh@ghaering.de>
 
@@ -20,7 +20,7 @@ To use the module, you must first create a :class:`Connection` object that
 represents the database.  Here the data will be stored in the
 :file:`/tmp/example` file::
 
-   conn = sqlite3.connect('/tmp/example')
+   conn = sqlite4.connect('/tmp/example')
 
 You can also supply the special name ``:memory:`` to create a database in RAM.
 
@@ -91,7 +91,7 @@ This example uses the iterator form::
 .. seealso::
 
    http://code.google.com/p/pysqlite/
-      The pysqlite web page -- sqlite3 is developed externally under the name
+      The pysqlite web page -- sqlite4 is developed externally under the name
       "pysqlite".
 
    http://www.sqlite.org
@@ -102,7 +102,7 @@ This example uses the iterator form::
       PEP written by Marc-André Lemburg.
 
 
-.. _sqlite3-module-contents:
+.. _sqlite4-module-contents:
 
 Module functions and constants
 ------------------------------
@@ -113,7 +113,7 @@ Module functions and constants
    This constant is meant to be used with the *detect_types* parameter of the
    :func:`connect` function.
 
-   Setting it makes the :mod:`sqlite3` module parse the declared type for each
+   Setting it makes the :mod:`sqlite4` module parse the declared type for each
    column it returns.  It will parse out the first word of the declared type,
    i. e.  for "integer primary key", it will parse out "integer", or for
    "number(10)" it will parse out "number". Then for that column, it will look
@@ -160,14 +160,14 @@ Module functions and constants
    any combination of :const:`PARSE_DECLTYPES` and :const:`PARSE_COLNAMES` to turn
    type detection on.
 
-   By default, the :mod:`sqlite3` module uses its :class:`Connection` class for the
+   By default, the :mod:`sqlite4` module uses its :class:`Connection` class for the
    connect call.  You can, however, subclass the :class:`Connection` class and make
    :func:`connect` use your class instead by providing your class for the *factory*
    parameter.
 
-   Consult the section :ref:`sqlite3-types` of this manual for details.
+   Consult the section :ref:`sqlite4-types` of this manual for details.
 
-   The :mod:`sqlite3` module internally uses a statement cache to avoid SQL parsing
+   The :mod:`sqlite4` module internally uses a statement cache to avoid SQL parsing
    overhead. If you want to explicitly set the number of statements that are cached
    for the connection, you can set the *cached_statements* parameter. The currently
    implemented default is to cache 100 statements.
@@ -200,7 +200,7 @@ Module functions and constants
    This can be used to build a shell for SQLite, as in the following example:
 
 
-   .. literalinclude:: ../includes/sqlite3/complete_statement.py
+   .. literalinclude:: ../includes/sqlite4/complete_statement.py
 
 
 .. function:: enable_callback_tracebacks(flag)
@@ -212,7 +212,7 @@ Module functions and constants
    again.
 
 
-.. _sqlite3-connection-objects:
+.. _sqlite4-connection-objects:
 
 Connection Objects
 ------------------
@@ -225,14 +225,14 @@ Connection Objects
 
    Get or set the current isolation level. :const:`None` for autocommit mode or
    one of "DEFERRED", "IMMEDIATE" or "EXCLUSIVE". See section
-   :ref:`sqlite3-controlling-transactions` for a more detailed explanation.
+   :ref:`sqlite4-controlling-transactions` for a more detailed explanation.
 
 
 .. method:: Connection.cursor([cursorClass])
 
    The cursor method accepts a single optional parameter *cursorClass*. If
    supplied, this must be a custom cursor class that extends
-   :class:`sqlite3.Cursor`.
+   :class:`sqlite4.Cursor`.
 
 
 .. method:: Connection.commit()
@@ -286,7 +286,7 @@ Connection Objects
 
    Example:
 
-   .. literalinclude:: ../includes/sqlite3/md5func.py
+   .. literalinclude:: ../includes/sqlite4/md5func.py
 
 
 .. method:: Connection.create_aggregate(name, num_params, aggregate_class)
@@ -302,7 +302,7 @@ Connection Objects
 
    Example:
 
-   .. literalinclude:: ../includes/sqlite3/mysumaggr.py
+   .. literalinclude:: ../includes/sqlite4/mysumaggr.py
 
 
 .. method:: Connection.create_collation(name, callable)
@@ -318,7 +318,7 @@ Connection Objects
 
    The following example shows a custom collation that sorts "the wrong way":
 
-   .. literalinclude:: ../includes/sqlite3/collation_reverse.py
+   .. literalinclude:: ../includes/sqlite4/collation_reverse.py
 
    To remove a collation, call ``create_collation`` with None as callable::
 
@@ -336,10 +336,10 @@ Connection Objects
 
    This routine registers a callback. The callback is invoked for each attempt to
    access a column of a table in the database. The callback should return
-   :const:`SQLITE_OK` if access is allowed, :const:`SQLITE_DENY` if the entire SQL
-   statement should be aborted with an error and :const:`SQLITE_IGNORE` if the
+   :const:`SQLITE4_OK` if access is allowed, :const:`SQLITE4_DENY` if the entire SQL
+   statement should be aborted with an error and :const:`SQLITE4_IGNORE` if the
    column should be treated as a NULL value. These constants are available in the
-   :mod:`sqlite3` module.
+   :mod:`sqlite4` module.
 
    The first argument to the callback signifies what kind of operation is to be
    authorized. The second and third argument will be arguments or :const:`None`
@@ -350,7 +350,7 @@ Connection Objects
 
    Please consult the SQLite documentation about the possible values for the first
    argument and the meaning of the second and third argument depending on the first
-   one. All necessary constants are available in the :mod:`sqlite3` module.
+   one. All necessary constants are available in the :mod:`sqlite4` module.
 
 
 .. method:: Connection.set_progress_handler(handler, n)
@@ -371,7 +371,7 @@ Connection Objects
    aggregates or whole new virtual table implementations. One well-known
    extension is the fulltext-search extension distributed with SQLite.
 
-   .. literalinclude:: ../includes/sqlite3/load_extension.py
+   .. literalinclude:: ../includes/sqlite4/load_extension.py
 
 .. method:: Connection.load_extension(path)
 
@@ -388,11 +388,11 @@ Connection Objects
 
    Example:
 
-   .. literalinclude:: ../includes/sqlite3/row_factory.py
+   .. literalinclude:: ../includes/sqlite4/row_factory.py
 
    If returning a tuple doesn't suffice and you want name-based access to
    columns, you should consider setting :attr:`row_factory` to the
-   highly-optimized :class:`sqlite3.Row` type. :class:`Row` provides both
+   highly-optimized :class:`sqlite4.Row` type. :class:`Row` provides both
    index-based and case-insensitive name-based access to columns with almost no
    memory overhead. It will probably be better than your own custom
    dictionary-based approach or even a db_row based solution.
@@ -404,19 +404,19 @@ Connection Objects
 
    Using this attribute you can control what objects are returned for the ``TEXT``
    data type. By default, this attribute is set to :class:`unicode` and the
-   :mod:`sqlite3` module will return Unicode objects for ``TEXT``. If you want to
+   :mod:`sqlite4` module will return Unicode objects for ``TEXT``. If you want to
    return bytestrings instead, you can set it to :class:`str`.
 
    For efficiency reasons, there's also a way to return Unicode objects only for
    non-ASCII data, and bytestrings otherwise. To activate it, set this attribute to
-   :const:`sqlite3.OptimizedUnicode`.
+   :const:`sqlite4.OptimizedUnicode`.
 
    You can also set it to any other callable that accepts a single bytestring
    parameter and returns the resulting object.
 
    See the following example code for illustration:
 
-   .. literalinclude:: ../includes/sqlite3/text_factory.py
+   .. literalinclude:: ../includes/sqlite4/text_factory.py
 
 
 .. attribute:: Connection.total_changes
@@ -429,22 +429,22 @@ Connection Objects
 
    Returns an iterator to dump the database in an SQL text format.  Useful when
    saving an in-memory database for later restoration.  This function provides
-   the same capabilities as the :kbd:`.dump` command in the :program:`sqlite3`
+   the same capabilities as the :kbd:`.dump` command in the :program:`sqlite4`
    shell.
 
    Example::
 
       # Convert file existing_db.db to SQL dump file dump.sql
-      import sqlite3, os
+      import sqlite4, os
 
-      con = sqlite3.connect('existing_db.db')
+      con = sqlite4.connect('existing_db.db')
       full_dump = os.linesep.join([line for line in con.iterdump()])
       f = open('dump.sql', 'w')
       f.writelines(full_dump)
       f.close()
 
 
-.. _sqlite3-cursor-objects:
+.. _sqlite4-cursor-objects:
 
 Cursor Objects
 --------------
@@ -456,17 +456,17 @@ A :class:`Cursor` instance has the following attributes and methods:
 .. method:: Cursor.execute(sql, [parameters])
 
    Executes an SQL statement. The SQL statement may be parametrized (i. e.
-   placeholders instead of SQL literals). The :mod:`sqlite3` module supports two
+   placeholders instead of SQL literals). The :mod:`sqlite4` module supports two
    kinds of placeholders: question marks (qmark style) and named placeholders
    (named style).
 
    This example shows how to use parameters with qmark style:
 
-   .. literalinclude:: ../includes/sqlite3/execute_1.py
+   .. literalinclude:: ../includes/sqlite4/execute_1.py
 
    This example shows how to use the named style:
 
-   .. literalinclude:: ../includes/sqlite3/execute_2.py
+   .. literalinclude:: ../includes/sqlite4/execute_2.py
 
    :meth:`execute` will only execute a single SQL statement. If you try to execute
    more than one statement with it, it will raise a Warning. Use
@@ -477,14 +477,14 @@ A :class:`Cursor` instance has the following attributes and methods:
 .. method:: Cursor.executemany(sql, seq_of_parameters)
 
    Executes an SQL command against all parameter sequences or mappings found in
-   the sequence *sql*.  The :mod:`sqlite3` module also allows using an
+   the sequence *sql*.  The :mod:`sqlite4` module also allows using an
    :term:`iterator` yielding parameters instead of a sequence.
 
-   .. literalinclude:: ../includes/sqlite3/executemany_1.py
+   .. literalinclude:: ../includes/sqlite4/executemany_1.py
 
    Here's a shorter example using a :term:`generator`:
 
-   .. literalinclude:: ../includes/sqlite3/executemany_2.py
+   .. literalinclude:: ../includes/sqlite4/executemany_2.py
 
 
 .. method:: Cursor.executescript(sql_script)
@@ -497,7 +497,7 @@ A :class:`Cursor` instance has the following attributes and methods:
 
    Example:
 
-   .. literalinclude:: ../includes/sqlite3/executescript.py
+   .. literalinclude:: ../includes/sqlite4/executescript.py
 
 
 .. method:: Cursor.fetchone()
@@ -531,7 +531,7 @@ A :class:`Cursor` instance has the following attributes and methods:
 
 .. attribute:: Cursor.rowcount
 
-   Although the :class:`Cursor` class of the :mod:`sqlite3` module implements this
+   Although the :class:`Cursor` class of the :mod:`sqlite4` module implements this
    attribute, the database engine's own support for the determination of "rows
    affected"/"rows selected" is quirky.
 
@@ -563,7 +563,7 @@ A :class:`Cursor` instance has the following attributes and methods:
 
    It is set for ``SELECT`` statements without any matching rows as well.
 
-.. _sqlite3-row-objects:
+.. _sqlite4-row-objects:
 
 Row Objects
 -----------
@@ -592,7 +592,7 @@ Row Objects
 
 Let's assume we initialize a table as in the example given above::
 
-    conn = sqlite3.connect(":memory:")
+    conn = sqlite4.connect(":memory:")
     c = conn.cursor()
     c.execute('''create table stocks
     (date text, trans text, symbol text,
@@ -604,13 +604,13 @@ Let's assume we initialize a table as in the example given above::
 
 Now we plug :class:`Row` in::
 
-    >>> conn.row_factory = sqlite3.Row
+    >>> conn.row_factory = sqlite4.Row
     >>> c = conn.cursor()
     >>> c.execute('select * from stocks')
-    <sqlite3.Cursor object at 0x7f4e7dd8fa80>
+    <sqlite4.Cursor object at 0x7f4e7dd8fa80>
     >>> r = c.fetchone()
     >>> type(r)
-    <type 'sqlite3.Row'>
+    <type 'sqlite4.Row'>
     >>> r
     (u'2006-01-05', u'BUY', u'RHAT', 100.0, 35.14)
     >>> len(r)
@@ -630,7 +630,7 @@ Now we plug :class:`Row` in::
     35.14
 
 
-.. _sqlite3-types:
+.. _sqlite4-types:
 
 SQLite and Python types
 -----------------------
@@ -680,9 +680,9 @@ This is how SQLite types are converted to Python types by default:
 | ``BLOB``    | :class:`buffer`                              |
 +-------------+----------------------------------------------+
 
-The type system of the :mod:`sqlite3` module is extensible in two ways: you can
+The type system of the :mod:`sqlite4` module is extensible in two ways: you can
 store additional Python types in a SQLite database via object adaptation, and
-you can let the :mod:`sqlite3` module convert SQLite types to different Python
+you can let the :mod:`sqlite4` module convert SQLite types to different Python
 types via converters.
 
 
@@ -691,13 +691,13 @@ Using adapters to store additional Python types in SQLite databases
 
 As described before, SQLite supports only a limited set of types natively. To
 use other Python types with SQLite, you must **adapt** them to one of the
-sqlite3 module's supported types for SQLite: one of NoneType, int, long, float,
+sqlite4 module's supported types for SQLite: one of NoneType, int, long, float,
 str, unicode, buffer.
 
-The :mod:`sqlite3` module uses Python object adaptation, as described in
+The :mod:`sqlite4` module uses Python object adaptation, as described in
 :pep:`246` for this.  The protocol to use is :class:`PrepareProtocol`.
 
-There are two ways to enable the :mod:`sqlite3` module to adapt a custom Python
+There are two ways to enable the :mod:`sqlite4` module to adapt a custom Python
 type to one of the supported ones.
 
 
@@ -717,7 +717,7 @@ Let's just use str and separate the coordinates using a semicolon. Then you need
 to give your class a method ``__conform__(self, protocol)`` which must return
 the converted value. The parameter *protocol* will be :class:`PrepareProtocol`.
 
-.. literalinclude:: ../includes/sqlite3/adapter_point_1.py
+.. literalinclude:: ../includes/sqlite4/adapter_point_1.py
 
 
 Registering an adapter callable
@@ -731,14 +731,14 @@ string representation and register the function with :meth:`register_adapter`.
    The type/class to adapt must be a :term:`new-style class`, i. e. it must have
    :class:`object` as one of its bases.
 
-.. literalinclude:: ../includes/sqlite3/adapter_point_2.py
+.. literalinclude:: ../includes/sqlite4/adapter_point_2.py
 
-The :mod:`sqlite3` module has two default adapters for Python's built-in
+The :mod:`sqlite4` module has two default adapters for Python's built-in
 :class:`datetime.date` and :class:`datetime.datetime` types.  Now let's suppose
 we want to store :class:`datetime.datetime` objects not in ISO representation,
 but as a Unix timestamp.
 
-.. literalinclude:: ../includes/sqlite3/adapter_datetime.py
+.. literalinclude:: ../includes/sqlite4/adapter_datetime.py
 
 
 Converting SQLite values to custom Python types
@@ -766,19 +766,19 @@ and constructs a :class:`Point` object from it.
        x, y = map(float, s.split(";"))
        return Point(x, y)
 
-Now you need to make the :mod:`sqlite3` module know that what you select from
+Now you need to make the :mod:`sqlite4` module know that what you select from
 the database is actually a point. There are two ways of doing this:
 
 * Implicitly via the declared type
 
 * Explicitly via the column name
 
-Both ways are described in section :ref:`sqlite3-module-contents`, in the entries
+Both ways are described in section :ref:`sqlite4-module-contents`, in the entries
 for the constants :const:`PARSE_DECLTYPES` and :const:`PARSE_COLNAMES`.
 
 The following example illustrates both approaches.
 
-.. literalinclude:: ../includes/sqlite3/converter_point.py
+.. literalinclude:: ../includes/sqlite4/converter_point.py
 
 
 Default adapters and converters
@@ -797,28 +797,28 @@ experimental SQLite date/time functions.
 
 The following example demonstrates this.
 
-.. literalinclude:: ../includes/sqlite3/pysqlite_datetime.py
+.. literalinclude:: ../includes/sqlite4/pysqlite_datetime.py
 
 
-.. _sqlite3-controlling-transactions:
+.. _sqlite4-controlling-transactions:
 
 Controlling Transactions
 ------------------------
 
-By default, the :mod:`sqlite3` module opens transactions implicitly before a
+By default, the :mod:`sqlite4` module opens transactions implicitly before a
 Data Modification Language (DML)  statement (i.e.
 ``INSERT``/``UPDATE``/``DELETE``/``REPLACE``), and commits transactions
 implicitly before a non-DML, non-query statement (i. e.
 anything other than ``SELECT`` or the aforementioned).
 
 So if you are within a transaction and issue a command like ``CREATE TABLE
-...``, ``VACUUM``, ``PRAGMA``, the :mod:`sqlite3` module will commit implicitly
+...``, ``VACUUM``, ``PRAGMA``, the :mod:`sqlite4` module will commit implicitly
 before executing that command. There are two reasons for doing that. The first
 is that some of these commands don't work within transactions. The other reason
 is that pysqlite needs to keep track of the transaction state (if a transaction
 is active or not).
 
-You can control which kind of ``BEGIN`` statements sqlite3 implicitly executes
+You can control which kind of ``BEGIN`` statements sqlite4 implicitly executes
 (or none at all) via the *isolation_level* parameter to the :func:`connect`
 call, or via the :attr:`isolation_level` property of connections.
 
@@ -830,7 +830,7 @@ statement, or set it to one of SQLite's supported isolation levels: "DEFERRED",
 
 
 
-Using :mod:`sqlite3` efficiently
+Using :mod:`sqlite4` efficiently
 --------------------------------
 
 
@@ -845,19 +845,19 @@ objects are created implicitly and these shortcut methods return the cursor
 objects. This way, you can execute a ``SELECT`` statement and iterate over it
 directly using only a single call on the :class:`Connection` object.
 
-.. literalinclude:: ../includes/sqlite3/shortcut_methods.py
+.. literalinclude:: ../includes/sqlite4/shortcut_methods.py
 
 
 Accessing columns by name instead of by index
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-One useful feature of the :mod:`sqlite3` module is the built-in
-:class:`sqlite3.Row` class designed to be used as a row factory.
+One useful feature of the :mod:`sqlite4` module is the built-in
+:class:`sqlite4.Row` class designed to be used as a row factory.
 
 Rows wrapped with this class can be accessed both by index (like tuples) and
 case-insensitively by name:
 
-.. literalinclude:: ../includes/sqlite3/rowclass.py
+.. literalinclude:: ../includes/sqlite4/rowclass.py
 
 
 Using the connection as a context manager
@@ -868,7 +868,7 @@ that automatically commit or rollback transactions.  In the event of an
 exception, the transaction is rolled back; otherwise, the transaction is
 committed:
 
-.. literalinclude:: ../includes/sqlite3/ctx_manager.py
+.. literalinclude:: ../includes/sqlite4/ctx_manager.py
 
 
 Common issues

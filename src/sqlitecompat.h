@@ -23,8 +23,8 @@
 
 #include "Python.h"
 
-#ifndef PYSQLITE_COMPAT_H
-#define PYSQLITE_COMPAT_H
+#ifndef PYSQLITE4_COMPAT_H
+#define PYSQLITE4_COMPAT_H
 
 /* define Py_ssize_t for pre-2.5 versions of Python */
 

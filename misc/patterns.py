@@ -1,12 +1,12 @@
 from __future__ import with_statement
-from pysqlite2 import dbapi2 as sqlite3
+from pysqlite2 import dbapi2 as sqlite4
 from datetime import datetime, timedelta
 import time
 
 def read_modify_write():
     # Open connection and create example schema and data.
     # In reality, open a database file instead of an in-memory database.
-    con = sqlite3.connect(":memory:")
+    con = sqlite4.connect(":memory:")
     cur = con.cursor()
     cur.executescript("""
     create table test(id integer primary key, data);
@@ -65,7 +65,7 @@ def read_modify_write():
 
 def delete_older_than():
     # Use detect_types if you want to use date/time types in pysqlite.
-    con = sqlite3.connect(":memory:", detect_types=sqlite3.PARSE_COLNAMES)
+    con = sqlite4.connect(":memory:", detect_types=sqlite4.PARSE_COLNAMES)
     cur = con.cursor()
 
     # With "DEFAULT current_timestamp" we have SQLite fill the timestamp column
@@ -88,7 +88,7 @@ def modify_insert():
     # Use a unique index and the REPLACE command to have the "insert if not
     # there, but modify if it is there" pattern. Race conditions are taken care
     # of by transactions.
-    con = sqlite3.connect(":memory:")
+    con = sqlite4.connect(":memory:")
     cur = con.cursor()
     cur.executescript("""
     create table test(id integer primary key, name, age);

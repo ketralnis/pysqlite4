@@ -1,4 +1,4 @@
-# Mimic the sqlite3 console shell's .dump command
+# Mimic the sqlite4 console shell's .dump command
 # Author: Paul Kippes <kippesp@gmail.com>
 
 def _iterdump(connection):

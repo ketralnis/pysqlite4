@@ -183,11 +183,11 @@ int pysqlite_build_row_cast_map(pysqlite_Cursor* self)
     Py_XDECREF(self->row_cast_map);
     self->row_cast_map = PyList_New(0);
 
-    for (i = 0; i < sqlite3_column_count(self->statement->st); i++) {
+    for (i = 0; i < sqlite4_column_count(self->statement->st); i++) {
         converter = NULL;
 
         if (self->connection->detect_types & PARSE_COLNAMES) {
-            colname = sqlite3_column_name(self->statement->st, i);
+            colname = sqlite4_column_name(self->statement->st, i);
             if (colname) {
                 for (pos = colname; *pos != 0; pos++) {
                     if (*pos == '[') {
@@ -210,7 +210,7 @@ int pysqlite_build_row_cast_map(pysqlite_Cursor* self)
         }
 
         if (!converter && self->connection->detect_types & PARSE_DECLTYPES) {
-            decltype = sqlite3_column_decltype(self->statement->st, i);
+            decltype = sqlite4_column_decltype(self->statement->st, i);
             if (decltype) {
                 for (pos = decltype;;pos++) {
                     /* Converter names are split at '(' and blanks.
@@ -295,7 +295,7 @@ static PyObject* pysqlite_unicode_from_string(const char* val_str, Py_ssize_t nb
  * Returns a row from the currently active SQLite statement
  *
  * Precondidition:
- * - sqlite3_step() has been called before and it returned SQLITE_ROW.
+ * - sqlite4_step() has been called before and it returned SQLITE4_ROW.
  */
 PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
 {
@@ -319,7 +319,7 @@ PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
     }
 
     Py_BEGIN_ALLOW_THREADS
-    numcols = sqlite3_data_count(self->statement->st);
+    numcols = sqlite4_data_count(self->statement->st);
     Py_END_ALLOW_THREADS
 
     row = PyTuple_New(numcols);
@@ -328,7 +328,7 @@ PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
     }
 
     for (i = 0; i < numcols; i++) {
-        nbytes = sqlite3_column_bytes(self->statement->st, i);
+        nbytes = sqlite4_column_bytes(self->statement->st, i);
 
         if (self->connection->detect_types) {
             converter = PyList_GetItem(self->row_cast_map, i);
@@ -340,7 +340,7 @@ PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
         }
 
         if (converter != Py_None) {
-            val_str = (const char*)sqlite3_column_blob(self->statement->st, i);
+            val_str = (const char*)sqlite4_column_blob(self->statement->st, i);
             if (!val_str) {
                 Py_INCREF(Py_None);
                 converted = Py_None;
@@ -357,22 +357,22 @@ PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
             }
         } else {
             Py_BEGIN_ALLOW_THREADS
-            coltype = sqlite3_column_type(self->statement->st, i);
+            coltype = sqlite4_column_type(self->statement->st, i);
             Py_END_ALLOW_THREADS
-            if (coltype == SQLITE_NULL) {
+            if (coltype == SQLITE4_NULL) {
                 Py_INCREF(Py_None);
                 converted = Py_None;
-            } else if (coltype == SQLITE_INTEGER) {
-                intval = sqlite3_column_int64(self->statement->st, i);
+            } else if (coltype == SQLITE4_INTEGER) {
+                intval = sqlite4_column_int64(self->statement->st, i);
                 if (intval < INT32_MIN || intval > INT32_MAX) {
                     converted = PyLong_FromLongLong(intval);
                 } else {
                     converted = PyInt_FromLong((long)intval);
                 }
-            } else if (coltype == SQLITE_FLOAT) {
-                converted = PyFloat_FromDouble(sqlite3_column_double(self->statement->st, i));
-            } else if (coltype == SQLITE_TEXT) {
-                val_str = (const char*)sqlite3_column_text(self->statement->st, i);
+            } else if (coltype == SQLITE4_FLOAT) {
+                converted = PyFloat_FromDouble(sqlite4_column_double(self->statement->st, i));
+            } else if (coltype == SQLITE4_TEXT) {
+                val_str = (const char*)sqlite4_column_text(self->statement->st, i);
                 if ((self->connection->text_factory == (PyObject*)&PyUnicode_Type)
                     || (self->connection->text_factory == pysqlite_OptimizedUnicode)) {
 
@@ -380,7 +380,7 @@ PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
                         self->connection->text_factory == pysqlite_OptimizedUnicode ? 1 : 0);
 
                     if (!converted) {
-                        colname = sqlite3_column_name(self->statement->st, i);
+                        colname = sqlite4_column_name(self->statement->st, i);
                         if (!colname) {
                             colname = "<unknown column name>";
                         }
@@ -394,8 +394,8 @@ PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
                     converted = PyObject_CallFunction(self->connection->text_factory, "s", val_str);
                 }
             } else {
-                /* coltype == SQLITE_BLOB */
-                nbytes = sqlite3_column_bytes(self->statement->st, i);
+                /* coltype == SQLITE4_BLOB */
+                nbytes = sqlite4_column_bytes(self->statement->st, i);
                 buffer = PyBuffer_New(nbytes);
                 if (!buffer) {
                     break;
@@ -403,7 +403,7 @@ PyObject* _pysqlite_fetch_one_row(pysqlite_Cursor* self)
                 if (PyObject_AsWriteBuffer(buffer, &raw_buffer, &nbytes)) {
                     break;
                 }
-                memcpy(raw_buffer, sqlite3_column_blob(self->statement->st, i), nbytes);
+                memcpy(raw_buffer, sqlite4_column_blob(self->statement->st, i), nbytes);
                 converted = buffer;
             }
         }
@@ -590,7 +590,7 @@ PyObject* _pysqlite_query_execute(pysqlite_Cursor* self, int multiple, PyObject*
             goto error;
         }
         rc = pysqlite_statement_create(self->statement, self->connection, operation);
-        if (rc != SQLITE_OK) {
+        if (rc != SQLITE4_OK) {
             Py_CLEAR(self->statement);
             goto error;
         }
@@ -652,17 +652,17 @@ PyObject* _pysqlite_query_execute(pysqlite_Cursor* self, int multiple, PyObject*
         while (1) {
             /* Actually execute the SQL statement. */
             rc = pysqlite_step(self->statement->st, self->connection);
-            if (rc == SQLITE_DONE ||  rc == SQLITE_ROW) {
+            if (rc == SQLITE4_DONE ||  rc == SQLITE4_ROW) {
                 /* If it worked, let's get out of the loop */
                 break;
             }
             /* Something went wrong.  Re-set the statement and try again. */
             rc = pysqlite_statement_reset(self->statement);
-            if (rc == SQLITE_SCHEMA) {
+            if (rc == SQLITE4_SCHEMA) {
                 /* If this was a result of the schema changing, let's try
                    again. */
                 rc = pysqlite_statement_recompile(self->statement, parameters);
-                if (rc == SQLITE_OK) {
+                if (rc == SQLITE4_OK) {
                     continue;
                 } else {
                     /* If the database gave us an error, promote it to Python. */
@@ -690,10 +690,10 @@ PyObject* _pysqlite_query_execute(pysqlite_Cursor* self, int multiple, PyObject*
             goto error;
         }
 
-        if (rc == SQLITE_ROW || (rc == SQLITE_DONE && statement_type == STATEMENT_SELECT)) {
+        if (rc == SQLITE4_ROW || (rc == SQLITE4_DONE && statement_type == STATEMENT_SELECT)) {
             if (self->description == Py_None) {
                 Py_BEGIN_ALLOW_THREADS
-                numcols = sqlite3_column_count(self->statement->st);
+                numcols = sqlite4_column_count(self->statement->st);
                 Py_END_ALLOW_THREADS
 
                 Py_DECREF(self->description);
@@ -706,7 +706,7 @@ PyObject* _pysqlite_query_execute(pysqlite_Cursor* self, int multiple, PyObject*
                     if (!descriptor) {
                         goto error;
                     }
-                    PyTuple_SetItem(descriptor, 0, _pysqlite_build_column_name(sqlite3_column_name(self->statement->st, i)));
+                    PyTuple_SetItem(descriptor, 0, _pysqlite_build_column_name(sqlite4_column_name(self->statement->st, i)));
                     Py_INCREF(Py_None); PyTuple_SetItem(descriptor, 1, Py_None);
                     Py_INCREF(Py_None); PyTuple_SetItem(descriptor, 2, Py_None);
                     Py_INCREF(Py_None); PyTuple_SetItem(descriptor, 3, Py_None);
@@ -718,14 +718,14 @@ PyObject* _pysqlite_query_execute(pysqlite_Cursor* self, int multiple, PyObject*
             }
         }
 
-        if (rc == SQLITE_ROW) {
+        if (rc == SQLITE4_ROW) {
             if (multiple) {
                 PyErr_SetString(pysqlite_ProgrammingError, "executemany() can only execute DML statements.");
                 goto error;
             }
 
             self->next_row = _pysqlite_fetch_one_row(self);
-        } else if (rc == SQLITE_DONE && !multiple) {
+        } else if (rc == SQLITE4_DONE && !multiple) {
             pysqlite_statement_reset(self->statement);
             Py_CLEAR(self->statement);
         }
@@ -738,13 +738,13 @@ PyObject* _pysqlite_query_execute(pysqlite_Cursor* self, int multiple, PyObject*
                 if (self->rowcount == -1L) {
                     self->rowcount = 0L;
                 }
-                self->rowcount += (long)sqlite3_changes(self->connection->db);
+                self->rowcount += (long)sqlite4_changes(self->connection->db);
         }
 
         Py_DECREF(self->lastrowid);
         if (!multiple && statement_type == STATEMENT_INSERT) {
             Py_BEGIN_ALLOW_THREADS
-            lastrowid = sqlite3_last_insert_rowid(self->connection->db);
+            lastrowid = sqlite4_last_insert_rowid(self->connection->db);
             Py_END_ALLOW_THREADS
             self->lastrowid = PyInt_FromLong((long)lastrowid);
         } else {
@@ -761,10 +761,10 @@ PyObject* _pysqlite_query_execute(pysqlite_Cursor* self, int multiple, PyObject*
 error:
     /* just to be sure (implicit ROLLBACKs with ON CONFLICT ROLLBACK/OR
      * ROLLBACK could have happened */
-    #ifdef SQLITE_VERSION_NUMBER
-    #if SQLITE_VERSION_NUMBER >= 3002002
+    #ifdef SQLITE4_VERSION_NUMBER
+    #if SQLITE4_VERSION_NUMBER >= 3002002
     if (self->connection && self->connection->db)
-        self->connection->inTransaction = !sqlite3_get_autocommit(self->connection->db);
+        self->connection->inTransaction = !sqlite4_get_autocommit(self->connection->db);
     #endif
     #endif
 
@@ -799,7 +799,7 @@ PyObject* pysqlite_cursor_executescript(pysqlite_Cursor* self, PyObject* args)
     PyObject* script_obj;
     PyObject* script_str = NULL;
     const char* script_cstr;
-    sqlite3_stmt* statement;
+    sqlite4_stmt* statement;
     int rc;
     PyObject* result;
 
@@ -836,32 +836,32 @@ PyObject* pysqlite_cursor_executescript(pysqlite_Cursor* self, PyObject* args)
 
     while (1) {
         Py_BEGIN_ALLOW_THREADS
-        rc = sqlite3_prepare(self->connection->db,
+        rc = sqlite4_prepare(self->connection->db,
                              script_cstr,
                              -1,
                              &statement,
                              &script_cstr);
         Py_END_ALLOW_THREADS
-        if (rc != SQLITE_OK) {
+        if (rc != SQLITE4_OK) {
             _pysqlite_seterror(self->connection->db, NULL);
             goto error;
         }
 
         /* execute statement, and ignore results of SELECT statements */
-        rc = SQLITE_ROW;
-        while (rc == SQLITE_ROW) {
+        rc = SQLITE4_ROW;
+        while (rc == SQLITE4_ROW) {
             rc = pysqlite_step(statement, self->connection);
             /* TODO: we probably need more error handling here */
         }
 
-        if (rc != SQLITE_DONE) {
-            (void)sqlite3_finalize(statement);
+        if (rc != SQLITE4_DONE) {
+            (void)sqlite4_finalize(statement);
             _pysqlite_seterror(self->connection->db, NULL);
             goto error;
         }
 
-        rc = sqlite3_finalize(statement);
-        if (rc != SQLITE_OK) {
+        rc = sqlite4_finalize(statement);
+        if (rc != SQLITE4_OK) {
             _pysqlite_seterror(self->connection->db, NULL);
             goto error;
         }
@@ -924,14 +924,14 @@ PyObject* pysqlite_cursor_iternext(pysqlite_Cursor *self)
 
     if (self->statement) {
         rc = pysqlite_step(self->statement->st, self->connection);
-        if (rc != SQLITE_DONE && rc != SQLITE_ROW) {
+        if (rc != SQLITE4_DONE && rc != SQLITE4_ROW) {
             (void)pysqlite_statement_reset(self->statement);
             Py_DECREF(next_row);
             _pysqlite_seterror(self->connection->db, NULL);
             return NULL;
         }
 
-        if (rc == SQLITE_ROW) {
+        if (rc == SQLITE4_ROW) {
             self->next_row = _pysqlite_fetch_one_row(self);
         }
     }

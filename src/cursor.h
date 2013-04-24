@@ -21,8 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_CURSOR_H
-#define PYSQLITE_CURSOR_H
+#ifndef PYSQLITE4_CURSOR_H
+#define PYSQLITE4_CURSOR_H
 #include "Python.h"
 
 #include "statement.h"

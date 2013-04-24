@@ -24,17 +24,17 @@
 #include "module.h"
 #include "connection.h"
 
-int pysqlite_step(sqlite3_stmt* statement, pysqlite_Connection* connection)
+int pysqlite_step(sqlite4_stmt* statement, pysqlite_Connection* connection)
 {
     int rc;
 
     if (statement == NULL) {
         /* this is a workaround for SQLite 3.5 and later. it now apparently
          * returns NULL for "no-operation" statements */
-        rc = SQLITE_OK;
+        rc = SQLITE4_OK;
     } else {
         Py_BEGIN_ALLOW_THREADS
-        rc = sqlite3_step(statement);
+        rc = sqlite4_step(statement);
         Py_END_ALLOW_THREADS
     }
 
@@ -45,59 +45,59 @@ int pysqlite_step(sqlite3_stmt* statement, pysqlite_Connection* connection)
  * Checks the SQLite error code and sets the appropriate DB-API exception.
  * Returns the error code (0 means no error occurred).
  */
-int _pysqlite_seterror(sqlite3* db, sqlite3_stmt* st)
+int _pysqlite_seterror(sqlite4* db, sqlite4_stmt* st)
 {
     int errorcode;
 
     /* SQLite often doesn't report anything useful, unless you reset the statement first */
     if (st != NULL) {
-        (void)sqlite3_reset(st);
+        (void)sqlite4_reset(st);
     }
 
-    errorcode = sqlite3_errcode(db);
+    errorcode = sqlite4_errcode(db);
 
     switch (errorcode)
     {
-        case SQLITE_OK:
+        case SQLITE4_OK:
             PyErr_Clear();
             break;
-        case SQLITE_INTERNAL:
-        case SQLITE_NOTFOUND:
-            PyErr_SetString(pysqlite_InternalError, sqlite3_errmsg(db));
+        case SQLITE4_INTERNAL:
+        case SQLITE4_NOTFOUND:
+            PyErr_SetString(pysqlite_InternalError, sqlite4_errmsg(db));
             break;
-        case SQLITE_NOMEM:
+        case SQLITE4_NOMEM:
             (void)PyErr_NoMemory();
             break;
-        case SQLITE_ERROR:
-        case SQLITE_PERM:
-        case SQLITE_ABORT:
-        case SQLITE_BUSY:
-        case SQLITE_LOCKED:
-        case SQLITE_READONLY:
-        case SQLITE_INTERRUPT:
-        case SQLITE_IOERR:
-        case SQLITE_FULL:
-        case SQLITE_CANTOPEN:
-        case SQLITE_PROTOCOL:
-        case SQLITE_EMPTY:
-        case SQLITE_SCHEMA:
-            PyErr_SetString(pysqlite_OperationalError, sqlite3_errmsg(db));
+        case SQLITE4_ERROR:
+        case SQLITE4_PERM:
+        case SQLITE4_ABORT:
+        case SQLITE4_BUSY:
+        case SQLITE4_LOCKED:
+        case SQLITE4_READONLY:
+        case SQLITE4_INTERRUPT:
+        case SQLITE4_IOERR:
+        case SQLITE4_FULL:
+        case SQLITE4_CANTOPEN:
+        case SQLITE4_PROTOCOL:
+        case SQLITE4_EMPTY:
+        case SQLITE4_SCHEMA:
+            PyErr_SetString(pysqlite_OperationalError, sqlite4_errmsg(db));
             break;
-        case SQLITE_CORRUPT:
-            PyErr_SetString(pysqlite_DatabaseError, sqlite3_errmsg(db));
+        case SQLITE4_CORRUPT:
+            PyErr_SetString(pysqlite_DatabaseError, sqlite4_errmsg(db));
             break;
-        case SQLITE_TOOBIG:
-            PyErr_SetString(pysqlite_DataError, sqlite3_errmsg(db));
+        case SQLITE4_TOOBIG:
+            PyErr_SetString(pysqlite_DataError, sqlite4_errmsg(db));
             break;
-        case SQLITE_CONSTRAINT:
-        case SQLITE_MISMATCH:
-            PyErr_SetString(pysqlite_IntegrityError, sqlite3_errmsg(db));
+        case SQLITE4_CONSTRAINT:
+        case SQLITE4_MISMATCH:
+            PyErr_SetString(pysqlite_IntegrityError, sqlite4_errmsg(db));
             break;
-        case SQLITE_MISUSE:
-            PyErr_SetString(pysqlite_ProgrammingError, sqlite3_errmsg(db));
+        case SQLITE4_MISUSE:
+            PyErr_SetString(pysqlite_ProgrammingError, sqlite4_errmsg(db));
             break;
         default:
-            PyErr_SetString(pysqlite_DatabaseError, sqlite3_errmsg(db));
+            PyErr_SetString(pysqlite_DatabaseError, sqlite4_errmsg(db));
             break;
     }
 

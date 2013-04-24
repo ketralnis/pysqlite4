@@ -40,7 +40,7 @@ Dependencies:
       package is recent enough (version 3.0.8 or higher) and that you're
       installing the development package as well, which will be need for
       building pysqlite. On Debian and derivatives, the package to look for is
-      called libsqlite3-dev.
+      called libsqlite4-dev.
 
  3. Python:
 
@@ -81,7 +81,7 @@ If setup.py raises no errors and its output concludes with something like
 
 If you receive an error message from the compiler, then try to look at the
 first error it reports. Other errors will most likely be aftereffects from the
-first error (like not finding the sqlite3.h header file).
+first error (like not finding the sqlite4.h header file).
 
 
 Step 3: Install pysqlite

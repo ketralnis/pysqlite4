@@ -29,11 +29,11 @@
 #include "microprotocols.h"
 #include "row.h"
 
-#ifdef PYSQLITE_EXPERIMENTAL
+#ifdef PYSQLITE4_EXPERIMENTAL
 #include "backup.h"
 #endif
 
-#if SQLITE_VERSION_NUMBER >= 3003003
+#if SQLITE4_VERSION_NUMBER >= 3003003
 #define HAVE_SHARED_CACHE
 #endif
 
@@ -100,7 +100,7 @@ static PyObject* module_complete(PyObject* self, PyObject* args, PyObject*
         return NULL; 
     }
 
-    if (sqlite3_complete(statement)) {
+    if (sqlite4_complete(statement)) {
         result = Py_True;
     } else {
         result = Py_False;
@@ -129,9 +129,9 @@ static PyObject* module_enable_shared_cache(PyObject* self, PyObject* args, PyOb
         return NULL; 
     }
 
-    rc = sqlite3_enable_shared_cache(do_enable);
+    rc = sqlite4_enable_shared_cache(do_enable);
 
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE4_OK) {
         PyErr_SetString(pysqlite_OperationalError, "Changing the shared_cache flag failed");
         return NULL;
     } else {
@@ -266,40 +266,40 @@ static IntConstantPair _int_constants[] = {
     {"PARSE_DECLTYPES", PARSE_DECLTYPES},
     {"PARSE_COLNAMES", PARSE_COLNAMES},
 
-    {"SQLITE_OK", SQLITE_OK},
-    {"SQLITE_DENY", SQLITE_DENY},
-    {"SQLITE_IGNORE", SQLITE_IGNORE},
-    {"SQLITE_CREATE_INDEX", SQLITE_CREATE_INDEX},
-    {"SQLITE_CREATE_TABLE", SQLITE_CREATE_TABLE},
-    {"SQLITE_CREATE_TEMP_INDEX", SQLITE_CREATE_TEMP_INDEX},
-    {"SQLITE_CREATE_TEMP_TABLE", SQLITE_CREATE_TEMP_TABLE},
-    {"SQLITE_CREATE_TEMP_TRIGGER", SQLITE_CREATE_TEMP_TRIGGER},
-    {"SQLITE_CREATE_TEMP_VIEW", SQLITE_CREATE_TEMP_VIEW},
-    {"SQLITE_CREATE_TRIGGER", SQLITE_CREATE_TRIGGER},
-    {"SQLITE_CREATE_VIEW", SQLITE_CREATE_VIEW},
-    {"SQLITE_DELETE", SQLITE_DELETE},
-    {"SQLITE_DROP_INDEX", SQLITE_DROP_INDEX},
-    {"SQLITE_DROP_TABLE", SQLITE_DROP_TABLE},
-    {"SQLITE_DROP_TEMP_INDEX", SQLITE_DROP_TEMP_INDEX},
-    {"SQLITE_DROP_TEMP_TABLE", SQLITE_DROP_TEMP_TABLE},
-    {"SQLITE_DROP_TEMP_TRIGGER", SQLITE_DROP_TEMP_TRIGGER},
-    {"SQLITE_DROP_TEMP_VIEW", SQLITE_DROP_TEMP_VIEW},
-    {"SQLITE_DROP_TRIGGER", SQLITE_DROP_TRIGGER},
-    {"SQLITE_DROP_VIEW", SQLITE_DROP_VIEW},
-    {"SQLITE_INSERT", SQLITE_INSERT},
-    {"SQLITE_PRAGMA", SQLITE_PRAGMA},
-    {"SQLITE_READ", SQLITE_READ},
-    {"SQLITE_SELECT", SQLITE_SELECT},
-    {"SQLITE_TRANSACTION", SQLITE_TRANSACTION},
-    {"SQLITE_UPDATE", SQLITE_UPDATE},
-    {"SQLITE_ATTACH", SQLITE_ATTACH},
-    {"SQLITE_DETACH", SQLITE_DETACH},
-#if SQLITE_VERSION_NUMBER >= 3002001
-    {"SQLITE_ALTER_TABLE", SQLITE_ALTER_TABLE},
-    {"SQLITE_REINDEX", SQLITE_REINDEX},
+    {"SQLITE4_OK", SQLITE4_OK},
+    {"SQLITE4_DENY", SQLITE4_DENY},
+    {"SQLITE4_IGNORE", SQLITE4_IGNORE},
+    {"SQLITE4_CREATE_INDEX", SQLITE4_CREATE_INDEX},
+    {"SQLITE4_CREATE_TABLE", SQLITE4_CREATE_TABLE},
+    {"SQLITE4_CREATE_TEMP_INDEX", SQLITE4_CREATE_TEMP_INDEX},
+    {"SQLITE4_CREATE_TEMP_TABLE", SQLITE4_CREATE_TEMP_TABLE},
+    {"SQLITE4_CREATE_TEMP_TRIGGER", SQLITE4_CREATE_TEMP_TRIGGER},
+    {"SQLITE4_CREATE_TEMP_VIEW", SQLITE4_CREATE_TEMP_VIEW},
+    {"SQLITE4_CREATE_TRIGGER", SQLITE4_CREATE_TRIGGER},
+    {"SQLITE4_CREATE_VIEW", SQLITE4_CREATE_VIEW},
+    {"SQLITE4_DELETE", SQLITE4_DELETE},
+    {"SQLITE4_DROP_INDEX", SQLITE4_DROP_INDEX},
+    {"SQLITE4_DROP_TABLE", SQLITE4_DROP_TABLE},
+    {"SQLITE4_DROP_TEMP_INDEX", SQLITE4_DROP_TEMP_INDEX},
+    {"SQLITE4_DROP_TEMP_TABLE", SQLITE4_DROP_TEMP_TABLE},
+    {"SQLITE4_DROP_TEMP_TRIGGER", SQLITE4_DROP_TEMP_TRIGGER},
+    {"SQLITE4_DROP_TEMP_VIEW", SQLITE4_DROP_TEMP_VIEW},
+    {"SQLITE4_DROP_TRIGGER", SQLITE4_DROP_TRIGGER},
+    {"SQLITE4_DROP_VIEW", SQLITE4_DROP_VIEW},
+    {"SQLITE4_INSERT", SQLITE4_INSERT},
+    {"SQLITE4_PRAGMA", SQLITE4_PRAGMA},
+    {"SQLITE4_READ", SQLITE4_READ},
+    {"SQLITE4_SELECT", SQLITE4_SELECT},
+    {"SQLITE4_TRANSACTION", SQLITE4_TRANSACTION},
+    {"SQLITE4_UPDATE", SQLITE4_UPDATE},
+    {"SQLITE4_ATTACH", SQLITE4_ATTACH},
+    {"SQLITE4_DETACH", SQLITE4_DETACH},
+#if SQLITE4_VERSION_NUMBER >= 3002001
+    {"SQLITE4_ALTER_TABLE", SQLITE4_ALTER_TABLE},
+    {"SQLITE4_REINDEX", SQLITE4_REINDEX},
 #endif
-#if SQLITE_VERSION_NUMBER >= 3003000
-    {"SQLITE_ANALYZE", SQLITE_ANALYZE},
+#if SQLITE4_VERSION_NUMBER >= 3003000
+    {"SQLITE4_ANALYZE", SQLITE4_ANALYZE},
 #endif
     {(char*)NULL, 0}
 };
@@ -318,7 +318,7 @@ PyMODINIT_FUNC init_sqlite(void)
         (pysqlite_connection_setup_types() < 0) ||
         (pysqlite_cache_setup_types() < 0) ||
         (pysqlite_statement_setup_types() < 0) ||
-        #ifdef PYSQLITE_EXPERIMENTAL
+        #ifdef PYSQLITE4_EXPERIMENTAL
         (pysqlite_backup_setup_types() < 0) ||
         #endif
         (pysqlite_prepare_protocol_setup_types() < 0)
@@ -417,13 +417,13 @@ PyMODINIT_FUNC init_sqlite(void)
         Py_DECREF(tmp_obj);
     }
 
-    if (!(tmp_obj = PyString_FromString(PYSQLITE_VERSION))) {
+    if (!(tmp_obj = PyString_FromString(PYSQLITE4_VERSION))) {
         goto error;
     }
     PyDict_SetItemString(dict, "version", tmp_obj);
     Py_DECREF(tmp_obj);
 
-    if (!(tmp_obj = PyString_FromString(sqlite3_libversion()))) {
+    if (!(tmp_obj = PyString_FromString(sqlite4_libversion()))) {
         goto error;
     }
     PyDict_SetItemString(dict, "sqlite_version", tmp_obj);

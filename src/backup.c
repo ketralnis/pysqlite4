@@ -31,7 +31,7 @@ void pysqlite_backup_dealloc(pysqlite_Backup* self)
 
     if (self->backup) {
         Py_BEGIN_ALLOW_THREADS
-        rc = sqlite3_backup_finish(self->backup);
+        rc = sqlite4_backup_finish(self->backup);
         Py_END_ALLOW_THREADS
 
         Py_DECREF(self->source_con);
@@ -51,26 +51,26 @@ PyObject* pysqlite_backup_step(pysqlite_Backup* self, PyObject* args, PyObject* 
         return NULL;
     }
 
-    int rc = sqlite3_backup_step(self->backup, npages);
+    int rc = sqlite4_backup_step(self->backup, npages);
 
-    if (rc == SQLITE_DONE) {
+    if (rc == SQLITE4_DONE) {
         Py_RETURN_TRUE;
-    } else if (rc == SQLITE_OK) {
+    } else if (rc == SQLITE4_OK) {
         Py_RETURN_FALSE;
     } else {
-        PyErr_SetString(pysqlite_OperationalError, sqlite3_errmsg(self->source_con->db));
+        PyErr_SetString(pysqlite_OperationalError, sqlite4_errmsg(self->source_con->db));
         return NULL;
     }
 }
 
 static PyObject* pysqlite_backup_get_remaining(pysqlite_Backup* self, void* unused)
 {
-    return Py_BuildValue("i", sqlite3_backup_remaining(self->backup));
+    return Py_BuildValue("i", sqlite4_backup_remaining(self->backup));
 }
 
 static PyObject* pysqlite_backup_get_pagecount(pysqlite_Backup* self, void* unused)
 {
-    return Py_BuildValue("i", sqlite3_backup_remaining(self->backup));
+    return Py_BuildValue("i", sqlite4_backup_remaining(self->backup));
 }
 
 static PyGetSetDef pysqlite_backup_getset[] = {

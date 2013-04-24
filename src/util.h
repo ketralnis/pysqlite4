@@ -21,18 +21,18 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_UTIL_H
-#define PYSQLITE_UTIL_H
+#ifndef PYSQLITE4_UTIL_H
+#define PYSQLITE4_UTIL_H
 #include "Python.h"
 #include "pythread.h"
-#include "sqlite3.h"
+#include "sqlite4.h"
 #include "connection.h"
 
-int pysqlite_step(sqlite3_stmt* statement, pysqlite_Connection* connection);
+int pysqlite_step(sqlite4_stmt* statement, pysqlite_Connection* connection);
 
 /**
  * Checks the SQLite error code and sets the appropriate DB-API exception.
  * Returns the error code (0 means no error occurred).
  */
-int _pysqlite_seterror(sqlite3* db, sqlite3_stmt* st);
+int _pysqlite_seterror(sqlite4* db, sqlite4_stmt* st);
 #endif

@@ -21,17 +21,17 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_BACKUP_H
-#define PYSQLITE_BACKUP_H
+#ifndef PYSQLITE4_BACKUP_H
+#define PYSQLITE4_BACKUP_H
 #include "Python.h"
 
-#include "sqlite3.h"
+#include "sqlite4.h"
 #include "connection.h"
 
 typedef struct
 {
     PyObject_HEAD
-    sqlite3_backup* backup;
+    sqlite4_backup* backup;
     pysqlite_Connection* source_con;
     pysqlite_Connection* dest_con;
 } pysqlite_Backup;

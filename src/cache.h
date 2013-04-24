@@ -21,8 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_CACHE_H
-#define PYSQLITE_CACHE_H
+#ifndef PYSQLITE4_CACHE_H
+#define PYSQLITE4_CACHE_H
 #include "Python.h"
 
 /* The LRU cache is implemented as a combination of a doubly-linked with a

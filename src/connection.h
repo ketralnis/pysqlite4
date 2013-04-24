@@ -21,8 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_CONNECTION_H
-#define PYSQLITE_CONNECTION_H
+#ifndef PYSQLITE4_CONNECTION_H
+#define PYSQLITE4_CONNECTION_H
 #include "Python.h"
 #include "pythread.h"
 #include "structmember.h"
@@ -30,12 +30,12 @@
 #include "cache.h"
 #include "module.h"
 
-#include "sqlite3.h"
+#include "sqlite4.h"
 
 typedef struct
 {
     PyObject_HEAD
-    sqlite3* db;
+    sqlite4* db;
 
     /* 1 if we are currently within a transaction, i. e. if a BEGIN has been
      * issued */

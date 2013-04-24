@@ -21,21 +21,21 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_STATEMENT_H
-#define PYSQLITE_STATEMENT_H
+#ifndef PYSQLITE4_STATEMENT_H
+#define PYSQLITE4_STATEMENT_H
 #include "Python.h"
 
 #include "connection.h"
-#include "sqlite3.h"
+#include "sqlite4.h"
 
-#define PYSQLITE_TOO_MUCH_SQL (-100)
-#define PYSQLITE_SQL_WRONG_TYPE (-101)
+#define PYSQLITE4_TOO_MUCH_SQL (-100)
+#define PYSQLITE4_SQL_WRONG_TYPE (-101)
 
 typedef struct
 {
     PyObject_HEAD
-    sqlite3* db;
-    sqlite3_stmt* st;
+    sqlite4* db;
+    sqlite4_stmt* st;
     PyObject* sql;
     int in_use;
     PyObject* in_weakreflist; /* List of weak references */

@@ -21,8 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef PYSQLITE_PREPARE_PROTOCOL_H
-#define PYSQLITE_PREPARE_PROTOCOL_H
+#ifndef PYSQLITE4_PREPARE_PROTOCOL_H
+#define PYSQLITE4_PREPARE_PROTOCOL_H
 #include "Python.h"
 
 typedef struct

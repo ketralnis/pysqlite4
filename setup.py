@@ -35,13 +35,13 @@ import cross_bdist_wininst
 
 sqlite = "sqlite"
 
-PYSQLITE_EXPERIMENTAL = False
+PYSQLITE4_EXPERIMENTAL = False
 
 sources = ["src/module.c", "src/connection.c", "src/cursor.c", "src/cache.c",
            "src/microprotocols.c", "src/prepare_protocol.c", "src/statement.c",
            "src/util.c", "src/row.c"]
 
-if PYSQLITE_EXPERIMENTAL:
+if PYSQLITE4_EXPERIMENTAL:
     sources.append("src/backup.c")
 
 include_dirs = []
@@ -103,7 +103,7 @@ def get_amalgamation():
     urllib.urlretrieve(amalgamation_url, "tmp.zip")
 
     zf = zipfile.ZipFile("tmp.zip")
-    files = ["sqlite3.c", "sqlite3.h"]
+    files = ["sqlite4.c", "sqlite4.h"]
     directory = zf.namelist()[0]
     for fn in files:
         print "Extracting", fn
@@ -126,9 +126,9 @@ class MyBuildExt(build_ext):
     def build_extension(self, ext):
         if self.amalgamation:
             get_amalgamation()
-            ext.define_macros.append(("SQLITE_ENABLE_FTS3", "1"))   # build with fulltext search enabled
-            ext.define_macros.append(("SQLITE_ENABLE_RTREE", "1"))   # build with fulltext search enabled
-            ext.sources.append(os.path.join(AMALGAMATION_ROOT, "sqlite3.c"))
+            ext.define_macros.append(("SQLITE4_ENABLE_FTS3", "1"))   # build with fulltext search enabled
+            ext.define_macros.append(("SQLITE4_ENABLE_RTREE", "1"))   # build with fulltext search enabled
+            ext.sources.append(os.path.join(AMALGAMATION_ROOT, "sqlite4.c"))
             ext.include_dirs.append(AMALGAMATION_ROOT)
         build_ext.build_extension(self, ext)
 
@@ -140,20 +140,20 @@ class MyBuildExt(build_ext):
 
 def get_setup_args():
 
-    PYSQLITE_VERSION = None
+    PYSQLITE4_VERSION = None
 
-    version_re = re.compile('#define PYSQLITE_VERSION "(.*)"')
+    version_re = re.compile('#define PYSQLITE4_VERSION "(.*)"')
     f = open(os.path.join("src", "module.h"))
     for line in f:
         match = version_re.match(line)
         if match:
-            PYSQLITE_VERSION = match.groups()[0]
-            PYSQLITE_MINOR_VERSION = ".".join(PYSQLITE_VERSION.split('.')[:2])
+            PYSQLITE4_VERSION = match.groups()[0]
+            PYSQLITE4_MINOR_VERSION = ".".join(PYSQLITE4_VERSION.split('.')[:2])
             break
     f.close()
 
-    if not PYSQLITE_VERSION:
-        print "Fatal error: PYSQLITE_VERSION could not be detected!"
+    if not PYSQLITE4_VERSION:
+        print "Fatal error: PYSQLITE4_VERSION could not be detected!"
         sys.exit(1)
 
     data_files = [("pysqlite2-doc",
@@ -166,7 +166,7 @@ def get_setup_args():
     py_modules = ["sqlite"]
     setup_args = dict(
             name = "pysqlite",
-            version = PYSQLITE_VERSION,
+            version = PYSQLITE4_VERSION,
             description = "DB-API 2.0 interface for SQLite 3.x",
             long_description=long_description,
             author = "Gerhard Haering",
