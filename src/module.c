@@ -33,10 +33,6 @@
 #include "backup.h"
 #endif
 
-#if SQLITE4_VERSION_NUMBER >= 3003003
-#define HAVE_SHARED_CACHE
-#endif
-
 /* static objects at module-level */
 
 PyObject* pysqlite_Error, *pysqlite_Warning, *pysqlite_InterfaceError, *pysqlite_DatabaseError,
@@ -115,37 +111,6 @@ PyDoc_STRVAR(module_complete_doc,
 "complete_statement(sql)\n\
 \n\
 Checks if a string contains a complete SQL statement. Non-standard.");
-
-#ifdef HAVE_SHARED_CACHE
-static PyObject* module_enable_shared_cache(PyObject* self, PyObject* args, PyObject*
-        kwargs)
-{
-    static char *kwlist[] = {"do_enable", NULL, NULL};
-    int do_enable;
-    int rc;
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i", kwlist, &do_enable))
-    {
-        return NULL; 
-    }
-
-    rc = sqlite4_enable_shared_cache(do_enable);
-
-    if (rc != SQLITE4_OK) {
-        PyErr_SetString(pysqlite_OperationalError, "Changing the shared_cache flag failed");
-        return NULL;
-    } else {
-        Py_INCREF(Py_None);
-        return Py_None;
-    }
-}
-
-PyDoc_STRVAR(module_enable_shared_cache_doc,
-"enable_shared_cache(do_enable)\n\
-\n\
-Enable or disable shared cache mode for the calling thread.\n\
-Experimental/Non-standard.");
-#endif /* HAVE_SHARED_CACHE */
 
 static PyObject* module_register_adapter(PyObject* self, PyObject* args)
 {
@@ -240,10 +205,6 @@ static PyMethodDef module_methods[] = {
      METH_VARARGS | METH_KEYWORDS, module_connect_doc},
     {"complete_statement",  (PyCFunction)module_complete,
      METH_VARARGS | METH_KEYWORDS, module_complete_doc},
-#ifdef HAVE_SHARED_CACHE
-    {"enable_shared_cache",  (PyCFunction)module_enable_shared_cache,
-     METH_VARARGS | METH_KEYWORDS, module_enable_shared_cache_doc},
-#endif
     {"register_adapter", (PyCFunction)module_register_adapter,
      METH_VARARGS, module_register_adapter_doc},
     {"register_converter", (PyCFunction)module_register_converter,
