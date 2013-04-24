@@ -98,7 +98,7 @@ int pysqlite_statement_create(pysqlite_Statement* self, pysqlite_Connection* con
     return rc;
 }
 
-int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObject* parameter, int allow_8bit_chars)
+int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObject* parameter)
 {
     int rc = SQLITE4_OK;
     long longval;
@@ -108,7 +108,6 @@ int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObjec
     Py_ssize_t buflen;
     PyObject* stringval;
     parameter_type paramtype;
-    char* c;
 
     if (parameter == Py_None) {
         rc = sqlite4_bind_null(self->st, pos);
@@ -139,17 +138,6 @@ int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObjec
         paramtype = TYPE_UNICODE;
     } else {
         paramtype = TYPE_UNKNOWN;
-    }
-
-    if (paramtype == TYPE_STRING && !allow_8bit_chars) {
-        string = PyString_AS_STRING(parameter);
-        for (c = string; *c != 0; c++) {
-            if (*c & 0x80) {
-                PyErr_SetString(pysqlite_ProgrammingError, "You must not use 8-bit bytestrings unless you use a text_factory that can interpret 8-bit bytestrings (like text_factory = str). It is highly recommended that you instead just switch your application to Unicode strings.");
-                rc = -1;
-                goto final;
-            }
-        }
     }
 
     switch (paramtype) {
@@ -209,7 +197,7 @@ static int _need_adapt(PyObject* obj)
     }
 }
 
-void pysqlite_statement_bind_parameters(pysqlite_Statement* self, PyObject* parameters, int allow_8bit_chars)
+void pysqlite_statement_bind_parameters(pysqlite_Statement* self, PyObject* parameters)
 {
     PyObject* current_param;
     PyObject* adapted;
@@ -263,7 +251,7 @@ void pysqlite_statement_bind_parameters(pysqlite_Statement* self, PyObject* para
                 }
             }
 
-            rc = pysqlite_statement_bind_parameter(self, i + 1, adapted, allow_8bit_chars);
+            rc = pysqlite_statement_bind_parameter(self, i + 1, adapted);
             Py_DECREF(adapted);
 
             if (rc != SQLITE4_OK) {
@@ -308,7 +296,7 @@ void pysqlite_statement_bind_parameters(pysqlite_Statement* self, PyObject* para
                 }
             }
 
-            rc = pysqlite_statement_bind_parameter(self, i, adapted, allow_8bit_chars);
+            rc = pysqlite_statement_bind_parameter(self, i, adapted);
             Py_DECREF(adapted);
 
             if (rc != SQLITE4_OK) {
@@ -341,21 +329,7 @@ int pysqlite_statement_recompile(pysqlite_Statement* self, PyObject* params)
     Py_END_ALLOW_THREADS
 
     if (rc == SQLITE4_OK) {
-        /* The efficient sqlite4_transfer_bindings is only available in SQLite
-         * version 3.2.2 or later. For older SQLite releases, that might not
-         * even define SQLITE4_VERSION_NUMBER, we do it the manual way.
-         */
-        #ifdef SQLITE4_VERSION_NUMBER
-        #if SQLITE4_VERSION_NUMBER >= 3002002
-        /* The check for the number of parameters is necessary to not trigger a
-         * bug in certain SQLite versions (experienced in 3.2.8 and 3.3.4). */
-        if (sqlite4_bind_parameter_count(self->st) > 0) {
-            (void)sqlite4_transfer_bindings(self->st, new_st);
-        }
-        #endif
-        #else
-        statement_bind_parameters(self, params);
-        #endif
+        pysqlite_statement_bind_parameters(self, params);
 
         (void)sqlite4_finalize(self->st);
         self->st = new_st;
